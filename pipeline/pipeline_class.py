@@ -128,17 +128,23 @@ class ModelPipeline:
             else:
                 # disable detection on non-target classes
                 conf_thres[self.configs['cls_to_id'][k]] = 1.1
-        self.logger.debug(f'[DET] configs: {configs}')
-        self.logger.debug(f'[DET] conf_thres: {conf_thres}')
-        result_dets = self.models['det'].postprocess(pred,im,image,conf_thres)
+
+        self.logger.info(f'[DET] configs: {configs}')
+        self.logger.info(f'[DET] conf_thres: {conf_thres}')
+        result_dets = self.models['det'].postprocess(pred,im,image,conf_thres[0])
         
         # only one image, get first batch
-        classes = result_dets['classes'][0]
-        boxes = result_dets['boxes'][0]
-        scores = result_dets['scores'][0]
+        if not len(result_dets['boxes']):
+            classes = []
+            boxes = []
+            scores = []
+        else:
+            classes = result_dets['classes'][0]
+            boxes = result_dets['boxes'][0]
+            scores = result_dets['scores'][0]
         
         # convert coordinates to sensor space
-        boxes = pipeline_utils.revert_to_origin(result_dets[:,:4], operators)
+        boxes = pipeline_utils.revert_to_origin(boxes, operators)
         
         # annotation
         if annotated_image is not None:
@@ -153,9 +159,9 @@ class ModelPipeline:
                 )
         
         results_dict = {
-            'boxes': boxes.tolist(),
+            'boxes': boxes,
             'classes': classes,
-            'scores': scores.tolist(),
+            'scores': scores,
         }
         time_info['postproc'] = time.time()-t0
         return results_dict, time_info
@@ -214,13 +220,13 @@ class ModelPipeline:
         obj_list = results_dict1['classes']
         # if not len(obj_list):
         #     result_dict['should_archive'] = True
-        result_dict['automation_keys'] = ['det_centers','det_diameters']
+        result_dict['automation_keys'] = []
         result_dict['factory_keys'] = ['det_boxes','det_scores','det_classes','total_proc_time']
         result_dict['det_boxes'] = results_dict1['boxes']
         result_dict['det_scores'] = results_dict1['scores']
         result_dict['det_classes'] = results_dict1['classes']
-        result_dict['det_centers'] = results_dict1['centers']
-        result_dict['det_diameters'] = results_dict1['diameters']
+        #result_dict['det_centers'] = results_dict1['centers']
+        #result_dict['det_diameters'] = results_dict1['diameters']
         result_dict['errors'] = errors
         
         self.logger.info(f'found objects: {obj_list}')
