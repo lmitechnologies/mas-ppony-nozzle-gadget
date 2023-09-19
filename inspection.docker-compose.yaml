@@ -159,7 +159,7 @@ services:
       args:
         PACKAGE_VER: ${PACKAGE_VER}
         PYPI_SERVER: ${PYPI_SERVER}
-      dockerfile: pipeline.dockerfile
+      dockerfile: x86.dockerfile
     image: pipeline:${PACKAGE_VER}
     restart: unless-stopped
     env_file:
