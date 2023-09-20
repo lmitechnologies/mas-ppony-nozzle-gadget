@@ -77,10 +77,7 @@ class UserPipelineSelector(models.Model):
     current_pipeline = models.ForeignKey(PipelineConfig, default=None, blank=False, null=False, on_delete=models.PROTECT,)
 
 class UserPipelineConfig(models.Model):
-    trigger_type_choices = [(False, 'For False'), (True, 'For True')]
-    pipeline_param_1 = models.CharField(max_length=256,default="pipeline param 1 value")
-    pipeline_param_2=models.IntegerField(default=0.0)
-    pipeline_param_3=models.BooleanField(choices=trigger_type_choices, default=False)
+    confidence_wrinkle=models.FloatField(default=0.5)
 #--
 class UserAutomationSelector(models.Model):
     current_automation = models.ForeignKey(AutomationConfig, default=None, blank=True, null=True, on_delete=models.SET_NULL,)

@@ -17,13 +17,10 @@ class ChoosePipelineForm(forms.ModelForm):
 class ChangePipelineForm(forms.ModelForm):
     class Meta:
         model = UserPipelineConfig
-        fields = ('pipeline_param_1','pipeline_param_2','pipeline_param_3')
-        labels = {'pipeline_param_1': 'Pipeline Param 1','pipeline_param_2': 'Pipeline Param 2','pipeline_param_3': 'Pipeline Param 3',}
-        CHOICES = [(True, 'For True'), (False, 'For False')]
+        fields = ('confidence_wrinkle',)
+        labels = {'confidence_wrinkle': 'Confidence Wrinkle',}
         widgets = {
-            'pipeline_param_1': forms.TextInput(attrs={'class': 'config-input_field'}),
-            'pipeline_param_2': forms.NumberInput(attrs={'class': 'config-input_field'}),
-            'pipeline_param_3': forms.RadioSelect(choices=CHOICES),
+            'confidence_wrinkle': forms.TextInput(attrs={'class': 'config-input_field'}),
         }
 
 class ChooseSensorForm(forms.ModelForm):
