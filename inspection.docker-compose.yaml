@@ -201,7 +201,7 @@ services:
     env_file:
       - ./sensor/sensor_gocator.env
     volumes:
-      - ${PWD}/data/test_images:/home/gadget/workspace/test_images
+      - ${PWD}/data/outputs:/home/gadget/workspace/test_images
       - inline-storage:/app/data
     depends_on:
       api-gateway: 

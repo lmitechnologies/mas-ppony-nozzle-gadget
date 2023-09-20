@@ -170,7 +170,7 @@ class ModelPipeline:
     def predict(self, configs: dict, image: np.ndarray, profile: np.ndarray = None,  **kwargs) -> dict:
         errors = []
         result_dict = {
-                'anotated_output': None,
+                'annotated_output': None,
                 'automation_keys': [],
                 'factory_keys': [],
                 'should_archive': False,
@@ -194,9 +194,7 @@ class ModelPipeline:
             c:configs.get(f'confidence_{c}', self.configs['conf_thres'][c]) for c in TARGET_CLASSES 
         }
         
-        annotated_image = None
-        if test_mode:
-            annotated_image = image.copy()
+        annotated_image = image.copy()
         
         try:
             results_dict1, time_info1 = self.det_predict(img_det, operators_det, conf_thres, annotated_image)
@@ -220,8 +218,11 @@ class ModelPipeline:
         obj_list = results_dict1['classes']
         # if not len(obj_list):
         #     result_dict['should_archive'] = True
+        result_dict['annotated_output'] = annotated_image
         result_dict['automation_keys'] = []
-        result_dict['factory_keys'] = ['det_boxes','det_scores','det_classes','total_proc_time']
+        result_dict['should_archive'] = True
+        result_dict['tags'] = ['image']
+        result_dict['factory_keys'] = ['tags', 'det_boxes','det_scores','det_classes','total_proc_time']
         result_dict['det_boxes'] = results_dict1['boxes']
         result_dict['det_scores'] = results_dict1['scores']
         result_dict['det_classes'] = results_dict1['classes']
